@@ -73,6 +73,8 @@ input,select{font:inherit;color:inherit}
 .card{cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
 .pic{position:relative;background:var(--tile);aspect-ratio:1/1.08;display:grid;place-items:center}
 .pic svg{width:86%;height:auto;display:block}
+.pic.ph{background:#fff}
+.pic img{width:100%;height:100%;object-fit:cover;display:block}
 .heart{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;background:var(--surface);display:grid;place-items:center}
 .heart svg{width:18px;height:18px;fill:none;stroke:var(--ink);stroke-width:2}
 .heart.on svg{fill:var(--sale);stroke:var(--sale)}
@@ -145,6 +147,15 @@ footer a{color:var(--ink)}
 .hint{background:var(--bg);border-radius:8px;padding:10px 12px;font-size:14px;margin:0 18px 6px}
 .stick{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:12px 18px}
 
+.pd-media{position:relative}
+.thumbs{display:flex;gap:8px;padding:10px 14px 4px}
+.thumbs button{width:64px;height:64px;border-radius:8px;border:2px solid var(--line);overflow:hidden;background:#fff}
+.thumbs button.on{border-color:var(--ink)}
+.thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-art.ph{align-items:center;padding:24px 16px}
+.hero-art.ph img{width:44%;max-width:250px;aspect-ratio:1;object-fit:cover;border-radius:14px;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.hero-art.ph img:first-child{transform:rotate(-4deg)}
+.hero-art.ph img:nth-child(2){transform:rotate(4deg);margin-left:-6%}
 /* forms */
 .f{display:grid;gap:14px}
 .f label{display:block;font-weight:700;font-size:14px;margin-bottom:4px}
@@ -181,7 +192,7 @@ footer a{color:var(--ink)}
   <section class="hero">
     <div class="hero-copy">
       <h1>Oversized, on purpose.</h1>
-      <p>Tees and hoodies for men and women, crop tops, and everyday tote bags. Order here and pay on delivery.</p>
+      <p>Oversized streetwear from our Instagram, now with easy ordering. Order here and pay on delivery.</p>
       <a class="btn" href="#shop">Shop all</a>
     </div>
     <div class="hero-art" id="heroArt" aria-hidden="true"></div>
@@ -219,24 +230,13 @@ const CATS = [['all','All'],['tees','Oversized tees'],['hoodies','Oversized hood
 const COL = {
   blk:{n:'Black',h:'#1B1C1F'}, wht:{n:'Off white',h:'#ECE8DE'}, sage:{n:'Sage',h:'#9DB08A'}, sky:{n:'Sky',h:'#9CB9E0'},
   sand:{n:'Sand',h:'#CBB89A'}, lilac:{n:'Lilac',h:'#B9A6E0'}, rust:{n:'Rust',h:'#B4552F'}, grey:{n:'Ash grey',h:'#8C9098'},
-  navy:{n:'Navy',h:'#22315B'}, pink:{n:'Blush',h:'#E7B0C4'}
+  navy:{n:'Navy',h:'#22315B'}, pink:{n:'Blush',h:'#E7B0C4'}, yel:{n:'Butter yellow',h:'#F1EFA0'}
 };
-/* Prices below are placeholders. Change name, prices, colors and print text to match your stock. */
+/* One product per block. price = selling price. mrp = original (crossed-out) price, or 0 to hide it. photos = image files uploaded next to this file. */
 const PRODUCTS = [
-  {id:'t1',cat:'tees',g:'men',name:'Drop Shoulder Tee',price:799,mrp:1499,colors:['blk','wht','sage'],print:'NO|RULES',desc:'Heavy cotton jersey with a dropped shoulder and a boxy body.'},
-  {id:'t2',cat:'tees',g:'women',name:'Washed Boxy Tee',price:849,mrp:1599,colors:['sand','lilac','grey'],print:'SOFT|CLUB',desc:'Garment-washed cotton that feels worn in from day one.'},
-  {id:'t3',cat:'tees',g:'unisex',name:'Heavyweight Graphic Tee',price:899,mrp:1699,colors:['wht','blk','rust'],print:'STAY|LOOSE',desc:'A thick, structured tee with a bold front print.'},
-  {id:'t4',cat:'tees',g:'men',name:'Pocket Oversized Tee',price:749,mrp:1399,colors:['navy','grey','sage'],pocket:1,print:'',desc:'Relaxed fit with a chest pocket. Easy with anything.'},
-  {id:'h1',cat:'hoodies',g:'men',name:'Fleece Oversized Hoodie',price:1699,mrp:2999,colors:['blk','grey','navy'],print:'URBAN|COOL',desc:'Brushed fleece inside, roomy hood, ribbed cuffs and hem.'},
-  {id:'h2',cat:'hoodies',g:'women',name:'Cloud Hoodie',price:1599,mrp:2799,colors:['pink','lilac','wht'],print:'CLOUD|NINE',desc:'Soft, slightly cropped in the body and wide through the sleeves.'},
-  {id:'h3',cat:'hoodies',g:'unisex',name:'Zip Boxy Hoodie',price:1899,mrp:3199,colors:['sage','blk','sand'],zip:1,print:'',desc:'Full zip with a boxy cut. Layer it over a tee.'},
-  {id:'h4',cat:'hoodies',g:'men',name:'Acid Wash Hoodie',price:1799,mrp:3099,colors:['grey','rust','navy'],print:'FADED',desc:'Washed finish so every piece looks a little different.'},
-  {id:'c1',cat:'crop',g:'women',name:'Ribbed Crop Top',price:549,mrp:999,colors:['blk','wht','pink'],rib:1,print:'',desc:'Stretchy ribbed knit that sits at the waist.'},
-  {id:'c2',cat:'crop',g:'women',name:'Boxy Crop Tee',price:599,mrp:1099,colors:['sky','sage','wht'],print:'HEY',desc:'Cotton crop tee with a relaxed, boxy shape.'},
-  {id:'c3',cat:'crop',g:'women',name:'Slogan Crop Top',price:579,mrp:1049,colors:['lilac','blk','rust'],print:'GOOD|VIBES',desc:'Cropped cut with a front slogan print.'},
-  {id:'b1',cat:'totes',g:'unisex',name:'Everyday Canvas Tote',price:399,mrp:799,colors:['sand','blk','wht'],print:'CARRY|ALL',desc:'Sturdy canvas with long handles that fit over the shoulder.'},
-  {id:'b2',cat:'totes',g:'unisex',name:'Zip Canvas Tote',price:499,mrp:899,colors:['navy','sage','blk'],print:'URBAN|COOL',desc:'Thick canvas with a zip top so nothing falls out.'},
-  {id:'b3',cat:'totes',g:'unisex',name:'Mini Tote',price:349,mrp:699,colors:['pink','sky','wht'],print:'MINI',desc:'A small tote for phone, wallet and keys.'}
+  {id:'crop-47',cat:'crop',g:'women',name:'47 Est. 2026 Crop Top',price:299,mrp:0,colors:['yel','blk'],
+   photos:{yel:['crop47-yellow-1.jpg','crop47-yellow-2.jpg'],blk:['crop47-black-1.jpg','crop47-black-2.jpg']},
+   desc:'Cropped tee with a pale blue 47 print, stars and Est. 2026 on the front.'}
 ];
 const SIZES = ['S','M','L','XL'];
 /* ==================================== */
@@ -244,7 +244,14 @@ const SIZES = ['S','M','L','XL'];
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const inr = n => '\u20B9' + Number(n).toLocaleString('en-IN');
-const off = p => Math.round((1 - p.price / p.mrp) * 100);
+const off = p => p.mrp > p.price ? Math.round((1 - p.price / p.mrp) * 100) : 0;
+const mrpOf = p => Math.max(p.mrp || 0, p.price);
+function imgsOf(p, c){ const ph = p.photos; if (!ph) return null; const l = ph[c] || ph[p.colors[0]] || Object.values(ph)[0]; return l && l.length ? l : null; }
+const isPh = (p, c) => !!imgsOf(p, c);
+function visual(p, c, i){ const l = imgsOf(p, c); return l ? `<img src="${esc(l[i || 0] || l[0])}" alt="${esc(p.name)}" loading="lazy">` : art(p, COL[c].h); }
+const priceHTML = p => `<div class="price"><b>${inr(p.price)}</b>${off(p) ? `<s>${inr(p.mrp)}</s><span class="off">${off(p)}% off</span>` : ''}</div>`;
+function thumbsHTML(p, c){ const l = imgsOf(p, c); if (!l || l.length < 2) return ''; return `<div class="thumbs">${l.map((u, k) => `<button data-a="thumb" data-id="${k}" class="${k === (sel ? sel.i : 0) ? 'on' : ''}" aria-label="Photo ${k + 1}"><img src="${esc(u)}" alt=""></button>`).join('')}</div>`; }
+function refreshPic(){ const p = byId(sel.id); const pic = $('#pdPic'); pic.className = 'pic' + (isPh(p, sel.c) ? ' ph' : ''); pic.innerHTML = visual(p, sel.c, sel.i); $('#pdThumbs').innerHTML = thumbsHTML(p, sel.c); }
 const byId = id => PRODUCTS.find(p => p.id === id);
 const store = {
   get(k, d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e){ return d; } },
@@ -300,10 +307,12 @@ const catLabel = c => c === 'tees' ? 'Oversized tee' : c === 'hoodies' ? 'Oversi
 /* ---------- static bits ---------- */
 document.title = STORE.name + ' | Oversized tees, hoodies, crop tops and totes';
 $('#logo').textContent = STORE.name;
-$('#heroArt').innerHTML = art(PRODUCTS[0], '#ECE8DE') + art(PRODUCTS[4], '#1B1C1F');
+(function(){ const hp = PRODUCTS.find(p => imgsOf(p, p.colors[0])); const h = $('#heroArt');
+  if (hp){ h.classList.add('ph'); const l = hp.colors.length > 1 ? hp.colors.slice(0, 2).map(c => imgsOf(hp, c)[0]) : imgsOf(hp, hp.colors[0]).slice(0, 2); h.innerHTML = l.map(u => `<img src="${esc(u)}" alt="">`).join(''); }
+  else if (PRODUCTS[0]) h.innerHTML = art(PRODUCTS[0], COL[PRODUCTS[0].colors[0]].h); })();
 $('#perks').innerHTML = `<span><b>Cash on delivery</b> available</span><span><b>Free delivery</b> above ${inr(STORE.freeAbove)}</span><span>Order confirmed on <b>WhatsApp</b></span>`;
 $('#foot').innerHTML = `<p><b style="color:var(--ink)">${esc(STORE.name)}</b>. Follow us on <a href="https://instagram.com/${encodeURIComponent(STORE.instagram)}" target="_blank" rel="noopener">Instagram</a> or message us on <a href="https://wa.me/${esc(STORE.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a>.</p>`;
-$('#cats').innerHTML = CATS.map(([k, l]) => `<button class="chip" role="tab" data-a="cat" data-id="${k}">${l}</button>`).join('');
+$('#cats').innerHTML = CATS.filter(([k]) => k === 'all' || PRODUCTS.some(p => p.cat === k)).map(([k, l]) => `<button class="chip" role="tab" data-a="cat" data-id="${k}">${l}</button>`).join('');
 $('#seg').innerHTML = [['all','All'],['men','Men'],['women','Women']].map(([k, l]) => `<button data-a="gender" data-id="${k}">${l}</button>`).join('');
 
 /* ---------- grid ---------- */
@@ -325,10 +334,10 @@ function renderGrid(){
   $('#cnt').textContent = l.length + (l.length === 1 ? ' item' : ' items') + (f.wish ? ' in wishlist' : '');
   $('#grid').innerHTML = l.length ? l.map(p => `
     <article class="card" data-a="open" data-id="${p.id}">
-      <div class="pic">${art(p, COL[p.colors[0]].h)}
+      <div class="pic ${isPh(p, p.colors[0]) ? 'ph' : ''}">${visual(p, p.colors[0], 0)}
         <button class="heart ${wish.includes(p.id) ? 'on' : ''}" data-a="wish" data-id="${p.id}" aria-label="${wish.includes(p.id) ? 'Remove from' : 'Add to'} wishlist"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.8 8.2 2.9 4.5 6.6 4.5c2 0 3.5 1 5.4 3 1.9-2 3.4-3 5.4-3 3.7 0 5.8 3.7 4.2 7.3C19.5 16.4 12 21 12 21z"/></svg></button></div>
       <div class="info"><h3>${esc(p.name)}</h3><p class="sub">${catLabel(p.cat)} for ${genderLabel(p.g).toLowerCase()}</p>
-        <div class="price"><b>${inr(p.price)}</b><s>${inr(p.mrp)}</s><span class="off">${off(p)}% off</span></div></div>
+        ${priceHTML(p)}</div>
     </article>`).join('')
   : `<div class="empty"><h3>${f.wish ? 'Your wishlist is empty' : 'Nothing matches that'}</h3><p>${f.wish ? 'Tap the heart on any product to save it here.' : 'Try a different search or clear the filters.'}</p><button class="btn alt" data-a="clear" style="margin-top:14px">Show all products</button></div>`;
   const wc = $('#wc'); wc.textContent = wish.length; wc.classList.toggle('on', wish.length > 0);
@@ -358,13 +367,13 @@ function toast(t){ const e = $('#toast'); e.textContent = t; e.classList.add('on
 function productHTML(){
   const p = byId(sel.id), needSize = p.cat !== 'totes';
   return `<div class="sh-head" style="position:absolute;right:0;top:0;border:0;background:none;z-index:3"><span></span><button class="x" data-a="close" aria-label="Close" style="background:var(--surface)">\u00D7</button></div>
-  <div class="pd"><div class="pic" id="pdPic">${art(p, COL[sel.c].h)}</div>
+  <div class="pd"><div class="pd-media"><div class="pic ${isPh(p, sel.c) ? 'ph' : ''}" id="pdPic">${visual(p, sel.c, sel.i)}</div><div id="pdThumbs">${thumbsHTML(p, sel.c)}</div></div>
   <div class="pd-info">
     <h2>${esc(p.name)}</h2><p class="sub">${catLabel(p.cat)} for ${genderLabel(p.g).toLowerCase()}</p>
-    <div class="price"><b>${inr(p.price)}</b><s>${inr(p.mrp)}</s><span class="off">${off(p)}% off</span></div>
-    <p class="note">Inclusive of all taxes. ${p.price >= STORE.freeAbove ? 'Free delivery.' : 'Free delivery above ' + inr(STORE.freeAbove) + '.'}</p>
+    ${priceHTML(p)}
+    <p class="note">${p.price >= STORE.freeAbove ? 'Free delivery.' : 'Free delivery above ' + inr(STORE.freeAbove) + '.'}</p>
     <div class="lbl">Color <span id="cn">${COL[sel.c].n}</span></div>
-    <div class="sw">${p.colors.map(c => `<button data-a="color" data-id="${c}" class="${c === sel.c ? 'on' : ''}" style="background:${COL[c].h}" aria-label="${COL[c].n}"></button>`).join('')}</div>
+    ${p.colors.length > 1 ? `<div class="sw">${p.colors.map(c => `<button data-a="color" data-id="${c}" class="${c === sel.c ? 'on' : ''}" style="background:${COL[c].h}" aria-label="${COL[c].n}"></button>`).join('')}</div>` : ''}
     ${needSize ? `<div class="lbl">Size</div><div class="sz">${SIZES.map(s => `<button data-a="size" data-id="${s}" class="${s === sel.s ? 'on' : ''}">${s}</button>`).join('')}</div>
     <p class="note">Cut oversized. Go one size down for a closer fit.</p>` : `<div class="lbl">Size <span>One size</span></div>`}
     <p class="msg" id="pmsg" role="alert"></p>
@@ -372,7 +381,7 @@ function productHTML(){
     <p class="desc">${esc(p.desc)}</p>
   </div></div>`;
 }
-function openProduct(id){ const p = byId(id); sel = {id, c:p.colors[0], s: p.cat === 'totes' ? 'One size' : null}; openSheet('product', productHTML(), false); $('#sheet').style.position = 'relative'; }
+function openProduct(id){ const p = byId(id); sel = {id, c:p.colors[0], i:0, s: p.cat === 'totes' ? 'One size' : null}; openSheet('product', productHTML(), false); $('#sheet').style.position = 'relative'; }
 
 function tryAdd(){
   const p = byId(sel.id);
@@ -385,7 +394,7 @@ function tryAdd(){
 
 function totals(){
   let mrp = 0, sub = 0;
-  cart.forEach(i => { const p = byId(i.id); mrp += p.mrp * i.qty; sub += p.price * i.qty; });
+  cart.forEach(i => { const p = byId(i.id); mrp += mrpOf(p) * i.qty; sub += p.price * i.qty; });
   const ship = sub === 0 || sub >= STORE.freeAbove ? 0 : STORE.shipFee;
   return {mrp, sub, disc: mrp - sub, ship, total: sub + ship};
 }
@@ -393,7 +402,7 @@ function bagHTML(){
   if (!cart.length) return head('Your bag') + `<div class="pad" style="text-align:center;padding-top:60px"><h3>Your bag is empty</h3><p class="sub">Add something you like and it will show up here.</p><button class="btn" data-a="close" style="margin-top:14px">Keep shopping</button></div>`;
   const t = totals();
   const items = cart.map(i => { const p = byId(i.id); return `
-    <div class="li"><div class="pic">${art(p, COL[i.c].h)}</div>
+    <div class="li"><div class="pic ${isPh(p, i.c) ? 'ph' : ''}">${visual(p, i.c, 0)}</div>
     <div><h3>${esc(p.name)}</h3><p class="sub">${COL[i.c].n}, ${esc(i.s)}</p>
       <div class="row"><div class="step"><button data-a="qty" data-k="${esc(i.key)}" data-d="-1" aria-label="Decrease quantity">\u2212</button><span>${i.qty}</span><button data-a="qty" data-k="${esc(i.key)}" data-d="1" aria-label="Increase quantity">+</button></div>
       <b>${inr(p.price * i.qty)}</b></div>
@@ -401,8 +410,8 @@ function bagHTML(){
   const need = STORE.freeAbove - t.sub;
   return head('Your bag') + items +
     (need > 0 ? `<p class="hint" style="margin-top:14px">Add ${inr(need)} more to get free delivery.</p>` : `<p class="hint good" style="margin-top:14px">You get free delivery on this order.</p>`) +
-    `<div class="sum"><div class="row"><span>Total MRP</span><span>${inr(t.mrp)}</span></div>
-    <div class="row"><span>Discount</span><span class="good">\u2212${inr(t.disc)}</span></div>
+    `<div class="sum">${t.disc > 0 ? `<div class="row"><span>Total MRP</span><span>${inr(t.mrp)}</span></div>
+    <div class="row"><span>Discount</span><span class="good">\u2212${inr(t.disc)}</span></div>` : `<div class="row"><span>Items</span><span>${inr(t.sub)}</span></div>`}
     <div class="row"><span>Delivery</span><span>${t.ship ? inr(t.ship) : '<span class="good">Free</span>'}</span></div>
     <div class="row tot"><span>Total</span><span>${inr(t.total)}</span></div></div>
     <div class="stick"><button class="btn full" data-a="checkout">Checkout \u00B7 ${inr(t.total)}</button></div>`;
@@ -485,7 +494,8 @@ document.addEventListener('click', e => {
   else if (a === 'clear'){ Object.assign(f, {cat:'all', g:'all', q:'', wish:false}); $('#q').value = ''; renderGrid(); }
   else if (a === 'bag') openBag();
   else if (a === 'close') closeSheet();
-  else if (a === 'color'){ sel.c = id; $('#pdPic').innerHTML = art(byId(sel.id), COL[id].h); $('#cn').textContent = COL[id].n; document.querySelectorAll('.sw button').forEach(b => b.classList.toggle('on', b.dataset.id === id)); }
+  else if (a === 'thumb'){ sel.i = Number(id); refreshPic(); }
+  else if (a === 'color'){ sel.c = id; sel.i = 0; refreshPic(); $('#cn').textContent = COL[id].n; document.querySelectorAll('.sw button').forEach(b => b.classList.toggle('on', b.dataset.id === id)); }
   else if (a === 'size'){ sel.s = id; $('#pmsg').textContent = ''; document.querySelectorAll('.sz button').forEach(b => b.classList.toggle('on', b.dataset.id === id)); }
   else if (a === 'add'){ if (tryAdd()) toast('Added to bag'); }
   else if (a === 'buy'){ if (tryAdd()) openBag(); }
